@@ -1,5 +1,6 @@
 from .formatter_port import FormatterPort
 from .llm_port import LLMPort
-from .model_port import ModelPort
+from .modeller_port import ModellerPort
+from .workflow_port import WorkflowPort
 
-__all__ = ["LLMPort", "FormatterPort", "ModelPort"]
+__all__ = ["LLMPort", "FormatterPort", "ModellerPort", "WorkflowPort"]

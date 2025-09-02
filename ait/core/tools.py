@@ -1,3 +1,4 @@
+import os
 from typing import Any, AsyncGenerator, Type, TypeVar
 
 from pydantic import BaseModel
@@ -21,9 +22,9 @@ class AIT:
 
     def __init__(
         self,
-        model: str,
-        embedding_model: str,
-        api_key: str,
+        model: str | None = None,
+        embedding_model: str | None = None,
+        api_key: str | None = None,
     ):
         """
         Initialize AIT with LLM client and prompt formatter.
@@ -33,6 +34,13 @@ class AIT:
             embedding_model (str): The model to use for embeddings
             api_key (str): The API key for authentication
         """
+        if not model:
+            model = os.getenv("LLM_MODEL", "")
+        if not embedding_model:
+            embedding_model = os.getenv("EMBEDDING_MODEL", "")
+        if not api_key:
+            api_key = os.getenv("API_KEY", "")
+
         self.llm_client = create_llm_client(
             model=model,
             embedding_model=embedding_model,
@@ -55,6 +63,9 @@ class AIT:
 
         Returns:
             Type[T]: The model with injected types
+
+        Example:
+            >>> ait.inject_types(Fruit, [("name", Literal[tuple(available_fruits)])])
         """
         return self.model_handler.inject_types(model, fields)
 
@@ -116,7 +127,7 @@ class AIT:
             AsyncGenerator[CompletionResponse, None]: Stream of responses from the LLM
         """
         messages = self._prepare_messages(path, **kwargs)
-        async for response in self.llm_client.stream(messages=messages):
+        async for response in await self.llm_client.stream(messages=messages):
             yield response
 
     async def asend(

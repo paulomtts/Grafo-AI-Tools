@@ -1,0 +1,135 @@
+import logging
+from http import HTTPStatus
+from typing import Any, Type, TypeVar, Union
+
+from grafo import Node
+from pydantic import BaseModel
+
+from ait.core.domain.errors import BaseError
+from ait.core.ports import WorkflowPort
+from ait.core.tools import AIT
+
+S = TypeVar("S", bound=BaseModel)
+V = TypeVar("V", bound=BaseModel)
+T = TypeVar("T", bound=BaseModel)
+
+MAX_RETRIES = 3
+
+
+class RetryCounter(BaseModel):
+    uuid: str
+    value: int = 0
+
+
+class BaseWorkflow(WorkflowPort):
+    """
+    Base class for agentic workflows.
+    """
+
+    def __init__(
+        self,
+        ait: AIT,
+        error_class: Type[BaseError],
+        max_retries: int = MAX_RETRIES,
+        echo: bool = False,
+    ):
+        self.ait = ait
+        self.ErrorClass = error_class
+        self.echo = echo
+
+        # Stateful context
+        self.current_retries = 0
+        self.max_retries = max_retries
+
+    # * Methods
+    async def task(
+        self,
+        path: str,
+        response_model: Type[S] | None = None,
+        **kwargs: Any,
+    ) -> Union[str, S]:
+        """
+        Execute a task.
+
+        Args:
+            path (str): The path to the prompt template file
+            response_model (Type[S] | None): The response model to return the response as
+            **kwargs: Additional arguments to pass to the prompt formatter
+
+        Returns:
+            Union[str, S]: The response from the LLM with text content
+        """
+
+        if not response_model:
+            response = await self.ait.chat(path=path, **kwargs)
+            return response.content
+
+        response = await self.ait.asend(
+            response_model=response_model,
+            path=path,
+            **kwargs,
+        )
+        return response.content
+
+    def _validate_output(self, node: Node[T], detail: str) -> T:
+        """
+        Validates the source output of a node.
+        """
+        if not node.output:
+            raise self.ErrorClass(
+                status_code=HTTPStatus.BAD_REQUEST.value,
+                message=detail,
+            )
+        return node.output
+
+    async def redirect(
+        self,
+        source_node: Node[S],
+        validation_node: Node[V],
+        target_nodes: list[Node[T]] | None = None,
+    ):
+        """
+        Redirects the flow of the workflow based on the validation node output.
+
+        Args:
+            source_node (Node[S]): The source node.
+            validation_node (Node[V]): The validation node.
+            target_nodes (list[Node[T]], optional): The target nodes. Defaults to None.
+        """
+        self.current_retries += 1
+        if self.current_retries > self.max_retries:
+            for child in validation_node.children:
+                await validation_node.disconnect(child)
+            raise self.ErrorClass(
+                status_code=HTTPStatus.BAD_REQUEST.value,
+                message="Max retries reached",
+            )
+
+        source_output = self._validate_output(source_node, "Source node output is None")
+        validation_output = self._validate_output(
+            validation_node, "Validation node output is None"
+        )
+        if self.echo:
+            logger = logging.getLogger("AIT")
+            logger.debug(f"Source Output: {source_output.model_dump_json(indent=2)}")
+            logger.debug(
+                f"Validation Output: {validation_output.model_dump_json(indent=2)}"
+            )
+        for child in validation_node.children:
+            await validation_node.disconnect(child)
+        is_valid = getattr(validation_output, "is_valid", False)
+        if is_valid:
+            if target_nodes:
+                for target_node in target_nodes:
+                    await validation_node.connect(target_node)
+            return
+        source_node.kwargs["eval"] = lambda: str(
+            source_output.model_dump_json(indent=2)
+        ) + str(getattr(validation_output, "reasoning", None))
+        await validation_node.connect(source_node)
+
+    async def run(self, *_: Any, **__: Any) -> Any:
+        """
+        Run the workflow.
+        """
+        raise NotImplementedError("Run method not implemented")

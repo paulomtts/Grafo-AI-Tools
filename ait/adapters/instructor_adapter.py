@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 from typing import AsyncGenerator, Type
 
 import instructor
@@ -50,12 +51,12 @@ class InstructorAdapter(LLMPort):
         response = output.choices[0].message.content
         if not response:
             raise LLMAdapterError(
-                "No response from the model",
+                status_code=HTTPStatus.SERVICE_UNAVAILABLE.value,
+                message="No response from the model",
             )
         return CompletionResponse(
             completion=output,
             content=response,
-            model=self._model,
         )
 
     async def stream(
@@ -84,7 +85,6 @@ class InstructorAdapter(LLMPort):
             yield CompletionResponse(
                 completion=chunk,
                 content=response,
-                model=self._model,
             )
 
     async def asend(
@@ -117,10 +117,12 @@ class InstructorAdapter(LLMPort):
         )
         content = response.choices[0].message.content
         if not content:
-            raise LLMAdapterError("No response content from the model")
+            raise LLMAdapterError(
+                status_code=HTTPStatus.SERVICE_UNAVAILABLE.value,
+                message="No response content from the model",
+            )
         content_json = json.loads(content)
         return CompletionResponse(
             completion=response,
-            model=self._model,
             content=response_model.model_validate(content_json),
         )

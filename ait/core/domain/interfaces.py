@@ -1,7 +1,7 @@
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -12,7 +12,6 @@ class CompletionResponse(BaseModel, Generic[T]):
     """
 
     completion: ChatCompletion | ChatCompletionChunk
-    model: str
     content: str | T
 
     @property
@@ -23,11 +22,3 @@ class CompletionResponse(BaseModel, Generic[T]):
         if isinstance(self.content, str) or isinstance(self.content, list):
             raise ValueError("Content is not structured.")
         return self.content
-
-
-class BaseEvaluation(BaseModel):
-    is_valid: bool = Field(description="Whether the response is valid or not.")
-    reasoning: str = Field(description="Reasoning about the validity of the response.")
-    humanized_failure_reason: Optional[str] = Field(
-        default=None, description="A humanized failure reason for the response."
-    )

@@ -6,27 +6,13 @@ from pydantic import BaseModel
 T = TypeVar("T", bound=BaseModel)
 
 
-class ModelPort(ABC):
+class ModellerPort(ABC):
     """
     Abstract base class for model operations.
     """
 
-    # TODO: work on decoupling
     @abstractmethod
-    def build_model(self, schema: str) -> Type[BaseModel]:
-        """
-        Builds a Pydantic model from the given schema.
-
-        Args:
-            schema (str): The schema to build the model from
-
-        Returns:
-            Type[BaseModel]: The built model
-        """
-        pass
-
-    @abstractmethod
-    def inject_type(
+    def inject_types(
         self,
         model: Type[T],
         fields: list[tuple[str, Any]],

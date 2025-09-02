@@ -4,11 +4,12 @@ from typing import Any, Type, TypeVar
 from pydantic import BaseModel, Field, create_model
 from pydantic_core import PydanticUndefined
 
+from ait.core.ports import ModellerPort
 
 T = TypeVar("T", bound=BaseModel)
 
 
-class PydanticAdapter:
+class PydanticAdapter(ModellerPort):
     """
     Service for creating Pydantic models from schemas.
     """
@@ -25,12 +26,6 @@ class PydanticAdapter:
         """
         normalized = re.sub(r"[^a-zA-Z0-9\s]", " ", string).strip()
         return "".join(word.capitalize() for word in normalized.split())
-
-    def build_model(self) -> Type[BaseModel]:
-        """
-        Builds a Pydantic model from the given schema.
-        """
-        raise NotImplementedError("Not implemented")
 
     def inject_types(
         self,

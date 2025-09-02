@@ -1,13 +1,14 @@
 import os
 
-from ait import LLMClient, PromptFormatter, ResponseModelService
+from ait.adapters import InstructorAdapter, Jinja2Adapter, PydanticAdapter
+from ait.core.ports import FormatterPort, LLMPort, ModellerPort
 
 
 def create_llm_client(
     model: str,
     embedding_model: str,
     api_key: str,
-) -> LLMClient:
+) -> LLMPort:
     """
     Factory function to create an LLMClient instance with default configuration.
 
@@ -25,28 +26,28 @@ def create_llm_client(
     embedding_model = embedding_model or os.getenv(
         "EMBEDDING_MODEL", "text-embedding-ada-002"
     )
-    return LLMClient(
+    return InstructorAdapter(
         model=model,
         embedding_model=embedding_model,
         api_key=api_key,
     )
 
 
-def create_prompt_formatter() -> PromptFormatter:
+def create_prompt_formatter() -> FormatterPort:
     """
     Factory function to create a PromptFormatter instance.
 
     Returns:
         PromptFormatter: Configured prompt formatter instance
     """
-    return PromptFormatter()
+    return Jinja2Adapter()
 
 
-def create_model_handler() -> ResponseModelService:
+def create_model_handler() -> ModellerPort:
     """
     Factory function to create a ResponseModelService instance.
 
     Returns:
         ResponseModelService: Configured model handler instance
     """
-    return ResponseModelService()
+    return PydanticAdapter()
