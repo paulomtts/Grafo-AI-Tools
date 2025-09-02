@@ -1,0 +1,38 @@
+# Include the essential files
+include LICENSE.txt
+include README.md
+include requirements.txt
+include setup.py
+
+# Include all Python files in the main directories
+recursive-include ait *.py
+recursive-include tests *.py
+
+# Exclude unnecessary directories and files
+exclude .github/*
+exclude .gitignore
+exclude .vscode/*
+exclude .venv/*
+exclude .pytest_cache/*
+recursive-exclude ait/__pycache__ *
+recursive-exclude tests/__pycache__ *
+# Include the essential files
+include LICENSE.txt
+include readme.md
+include requirements.txt
+include setup.py
+
+# Include all Python files in the main directories
+recursive-include ait *.py
+recursive-include tests *.py
+
+# Exclude unnecessary directories and files
+exclude .gitignore
+exclude .vscode/*
+exclude .venv/*
+exclude .pytest_cache/*
+exclude push-all.sh
+exclude ait.egg-info/*
+recursive-exclude ait/__pycache__ *
+recursive-exclude tests/__pycache__ *
+recursive-exclude ait.egg-info *
