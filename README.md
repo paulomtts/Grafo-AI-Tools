@@ -13,7 +13,7 @@ This simple library offers a set of predefined functions for:
 Additionally, we provide `grafo` out of the box for convenient workflow building.
 
 ## About Grafo
-Grafo (https://github.com/paulomtts/grafo) is a library for building executable DAGs where each node contains a coroutine. Since the DAG abstraction fits particularly well into AI-driven building, we have provided the `BaseWorkflow` class with the following methods:
+Grafo (see Recommended Docs below) is a library for building executable DAGs where each node contains a coroutine. Since the DAG abstraction fits particularly well into AI-driven building, we have provided the `BaseWorkflow` class with the following methods:
 - `task` for LLM calling
 - `redirect` to help you manage redirections in your `grafo` workflows
 
