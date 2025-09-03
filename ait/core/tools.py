@@ -25,6 +25,7 @@ class AIT:
         model: str | None = None,
         embedding_model: str | None = None,
         api_key: str | None = None,
+        base_url: str | None = None,
     ):
         """
         Initialize AIT with LLM client and prompt formatter.
@@ -45,6 +46,7 @@ class AIT:
             model=model,
             embedding_model=embedding_model,
             api_key=api_key,
+            base_url=base_url,
         )
         self.prompt_formatter = create_prompt_formatter()
         self.model_handler = create_model_handler()

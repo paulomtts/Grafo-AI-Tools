@@ -8,6 +8,7 @@ def create_llm_client(
     model: str,
     embedding_model: str,
     api_key: str,
+    base_url: str | None = None,
 ) -> LLMPort:
     """
     Factory function to create an LLMClient instance with default configuration.
@@ -30,6 +31,7 @@ def create_llm_client(
         model=model,
         embedding_model=embedding_model,
         api_key=api_key,
+        base_url=base_url,
     )
 
 

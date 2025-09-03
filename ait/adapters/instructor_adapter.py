@@ -20,33 +20,21 @@ class InstructorAdapter(LLMPort):
         model: str,
         embedding_model: str,
         api_key: str,
+        base_url: str | None = None,
     ):
         self._model = model
         self._embedding_model = embedding_model
 
-        # cache = AutoCache(maxsize=1000)
-        openai_client = AsyncOpenAI(
+        client_kwargs = dict(
             api_key=api_key,
-            base_url="http://localhost:11434/v1",
         )
+        if base_url:
+            client_kwargs["base_url"] = "http://localhost:11434/v1"
+        openai_client = AsyncOpenAI(**client_kwargs)  # type: ignore
         self.client = instructor.from_openai(
             client=openai_client,
             mode=instructor.Mode.JSON,
         )
-
-        # self.client = instructor.from_openai(
-        #     client=client,
-        #     model=model,
-        #     # async_client=True,
-        #     base_url="http://localhost:11434",
-        # )
-        # self.client = instructor.from_provider(
-        #     model=model,
-        #     api_key=api_key,
-        #     cache=cache,
-        #     async_client=True,
-        #     base_url="http://localhost:11434",
-        # )
 
     async def chat(self, messages: list[dict[str, str]]) -> CompletionResponse:
         """
