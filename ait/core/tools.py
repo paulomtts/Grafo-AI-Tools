@@ -40,7 +40,7 @@ class AITools:
         if not embedding_model:
             embedding_model = os.getenv("EMBEDDING_MODEL", "")
         if not api_key:
-            api_key = os.getenv("API_KEY", "")
+            api_key = os.getenv("LLM_API_KEY", "")
 
         self.llm_client = create_llm_client(
             model=model,

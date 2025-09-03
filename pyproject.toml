@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
     { name = "@paulomtts", email = "paulomtts@outlook.com" }
 ]
-urls = { "Homepage" = "https://github.com/paulomtts/ait.git" }
+urls = { "Homepage" = "https://github.com/paulomtts/Grafo-AI-Tools.git" }
 license = { text = "MIT" }
 keywords = ["ai", "agents", "llm", "workflows"]
 classifiers = [
