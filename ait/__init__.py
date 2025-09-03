@@ -5,13 +5,13 @@ from .adapters import Jinja2Adapter as PromptFormatter
 from .adapters import PydanticAdapter as ModelService
 from .core.base import BaseWorkflow
 from .core.domain.interfaces import CompletionResponse
-from .core.tools import AIT
+from .core.tools import AITools
 
 __all__ = [
     "LLMClient",
     "PromptFormatter",
     "ModelService",
-    "AIT",
+    "AITools",
     "CompletionResponse",
     "Node",
     "TreeExecutor",

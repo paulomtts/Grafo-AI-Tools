@@ -15,9 +15,9 @@ N = TypeVar("N")
 C = TypeVar("C")
 
 
-class AIT:
+class AITools:
     """
-    Provides tools for LLM interactions.
+    A class that bundles methods for easily interacting with LLMs and manipulating pydantic BaseModels.
     """
 
     def __init__(

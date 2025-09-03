@@ -7,7 +7,7 @@ Building AI-driven software leans upon a number of utilities, such as prompt bui
 # HOW
 This simple library offers a set of predefined functions for:
 - Easy prompting - you need only provide a path
-- Calling LLMs
+- Calling LLMs - instructor takes care of that for us
 - Modifying response models - we use Pydantic (duh)
 
 Additionally, we provide `grafo` out of the box for convenient workflow building.

@@ -3,7 +3,7 @@ from typing import Literal
 import pytest
 from pydantic import BaseModel
 
-from ait import AIT, BaseWorkflow, Node, TreeExecutor
+from ait import AITools, BaseWorkflow, Node, TreeExecutor
 from ait.core.domain.errors import BaseError
 
 
@@ -23,7 +23,7 @@ class MockWorkflowError(BaseError):
 
 
 class MockWorkflow(BaseWorkflow):
-    def __init__(self, ait: AIT):
+    def __init__(self, ait: AITools):
         super().__init__(ait, MockWorkflowError)
 
     async def fruit_purchase(self, **_) -> FruitPurchase:
@@ -77,7 +77,7 @@ class MockWorkflow(BaseWorkflow):
 
 @pytest.mark.asyncio
 async def test_mock_workflow():
-    ait = AIT("qwen3:8b")
+    ait = AITools("qwen3:8b")
     workflow = MockWorkflow(ait)
     result = await workflow.run("I want to buy 5 apples")
     assert isinstance(result, FruitPurchase)

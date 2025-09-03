@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from ait.core.domain.errors import BaseError
 from ait.core.ports import WorkflowPort
-from ait.core.tools import AIT
+from ait.core.tools import AITools
 
 S = TypeVar("S", bound=BaseModel)
 V = TypeVar("V", bound=BaseModel)
@@ -28,7 +28,7 @@ class BaseWorkflow(WorkflowPort):
 
     def __init__(
         self,
-        ait: AIT,
+        ait: AITools,
         error_class: Type[BaseError],
         max_retries: int = MAX_RETRIES,
         echo: bool = False,
