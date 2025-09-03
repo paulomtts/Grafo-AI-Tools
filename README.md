@@ -1,3 +1,6 @@
+# Install
+`uv add grafo-ai-tools`
+
 # WHAT
 A set of tools for easily interacting with LLMs.
 
