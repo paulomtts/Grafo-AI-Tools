@@ -26,10 +26,20 @@ class MockWorkflow(BaseWorkflow):
     def __init__(self, ait: AIT):
         super().__init__(ait, MockWorkflowError)
 
+    async def fruit_purchase(self, **_) -> FruitPurchase:
+        return FruitPurchase(product="apple", quantity=5)
+
+    async def fruit_validation(self, **_) -> ValidationResult:
+        return ValidationResult(
+            is_valid=True,
+            reason="The identified purchase matches the user's request.",
+            humanized_failure=None,
+        )
+
     async def run(self, message: str) -> FruitPurchase:
         purchase_node = Node[FruitPurchase](
             uuid="purchase_node",
-            coroutine=self.task,
+            coroutine=self.fruit_purchase,
             kwargs=dict(
                 path="./tests/purchase.md",
                 response_model=FruitPurchase,
@@ -39,7 +49,7 @@ class MockWorkflow(BaseWorkflow):
 
         validation_node = Node[ValidationResult](
             uuid="validation_node",
-            coroutine=self.task,
+            coroutine=self.fruit_validation,
             kwargs=dict(
                 path="./tests/validation.md",
                 response_model=ValidationResult,
