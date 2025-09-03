@@ -14,7 +14,7 @@ urls = { "Homepage" = "https://github.com/paulomtts/ait.git" }
 license = { text = "MIT" }
 keywords = ["ai", "agents", "llm", "workflows"]
 classifiers = [
-    "Development Status :: Beta",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: MIT License",
     "Operating System :: OS Independent",
