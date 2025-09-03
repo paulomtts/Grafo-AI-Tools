@@ -14,14 +14,13 @@ urls = { "Homepage" = "https://github.com/paulomtts/ait.git" }
 license = { text = "MIT" }
 keywords = ["ai", "agents", "llm", "workflows"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: >=3.11",
+    "Topic :: Software Development",
+    "Topic :: Artificial Intelligence",
 ]
 
 requires-python = ">=3.11"
