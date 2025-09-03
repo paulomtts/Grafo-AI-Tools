@@ -100,8 +100,9 @@ class BaseWorkflow(WorkflowPort):
         validation_output = self._validate_output(
             validation_node, "Validation node output is None"
         )
+        is_valid = getattr(validation_output, "is_valid", False)
         self.current_retries += 1
-        if self.current_retries > self.max_retries:
+        if self.current_retries > self.max_retries and not is_valid:
             for child in validation_node.children:
                 await validation_node.disconnect(child)
             raise self.ErrorClass(
@@ -116,7 +117,7 @@ class BaseWorkflow(WorkflowPort):
             )
         for child in validation_node.children:
             await validation_node.disconnect(child)
-        is_valid = getattr(validation_output, "is_valid", False)
+
         if is_valid:
             if target_nodes:
                 for target_node in target_nodes:
