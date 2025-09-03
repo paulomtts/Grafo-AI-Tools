@@ -1,3 +1,5 @@
+__version__ = "0.1.1"
+
 from grafo import Chunk, Node, TreeExecutor
 
 from .adapters import InstructorAdapter as LLMClient

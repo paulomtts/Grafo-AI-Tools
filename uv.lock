@@ -93,29 +93,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ait"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "build" },
-    { name = "grafo" },
-    { name = "instructor" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pyyaml" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "build", specifier = ">=1.3.0" },
-    { name = "grafo", specifier = ">=0.2.36" },
-    { name = "instructor", specifier = ">=1.11.2" },
-    { name = "pytest", specifier = ">=8.4.1" },
-    { name = "pytest-asyncio", specifier = ">=1.1.0" },
-    { name = "pyyaml", specifier = ">=6.0.2" },
-]
-
-[[package]]
 name = "annotated-types"
 version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -159,6 +136,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/25/1c/23e33405a7c9eac261dff640926b8b5adaed6a6eb3e1767d441ed611d0c0/build-1.3.0.tar.gz", hash = "sha256:698edd0ea270bde950f53aed21f3a0135672206f3911e0176261a31e0e07b397", size = 48544, upload-time = "2025-08-01T21:27:09.268Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl", hash = "sha256:7145f0b5061ba90a1500d60bd1b13ca0a8a4cebdd0cc16ed8adf1c0e739f43b4", size = 23382, upload-time = "2025-08-01T21:27:07.844Z" },
+]
+
+[[package]]
+name = "bump2version"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/29/2a/688aca6eeebfe8941235be53f4da780c6edee05dbbea5d7abaa3aab6fad2/bump2version-1.0.1.tar.gz", hash = "sha256:762cb2bfad61f4ec8e2bdf452c7c267416f8c70dd9ecb1653fd0bbb01fa936e6", size = 36236, upload-time = "2020-10-07T18:38:40.119Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/e3/fa60c47d7c344533142eb3af0b73234ef8ea3fb2da742ab976b947e717df/bump2version-1.0.1-py2.py3-none-any.whl", hash = "sha256:37f927ea17cde7ae2d7baf832f8e80ce3777624554a653006c9144f8017fe410", size = 22030, upload-time = "2020-10-07T18:38:38.148Z" },
 ]
 
 [[package]]
@@ -359,6 +345,31 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/1a/87/06886031165f825b75333877a02c589743c95f2d9736b8afda66c8c2f2f0/grafo-0.2.36.tar.gz", hash = "sha256:28548f73736bfdffdcbd96134b3aefc9010c80c06cffd4a75dad3256883e7a41", size = 16327, upload-time = "2025-07-31T01:31:01.833Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f5/ee/07019094b6856802519cebcce7acf505be3cb82f14440cdd2d62c2b90df5/grafo-0.2.36-py3-none-any.whl", hash = "sha256:fce85ccb7ce5e29fb239dd9580b810d4b370ce9f472e94975f918113e8bd84e0", size = 11186, upload-time = "2025-07-31T01:31:00.7Z" },
+]
+
+[[package]]
+name = "grafo-ai-tools"
+version = "0.1.1"
+source = { editable = "." }
+dependencies = [
+    { name = "build" },
+    { name = "bump2version" },
+    { name = "grafo" },
+    { name = "instructor" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "build", specifier = ">=1.3.0" },
+    { name = "bump2version", specifier = ">=1.0.1" },
+    { name = "grafo", specifier = ">=0.2.36" },
+    { name = "instructor", specifier = ">=1.11.2" },
+    { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pytest-asyncio", specifier = ">=1.1.0" },
+    { name = "pyyaml", specifier = ">=6.0.2" },
 ]
 
 [[package]]
