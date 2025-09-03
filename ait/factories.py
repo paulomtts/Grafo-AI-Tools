@@ -22,7 +22,7 @@ def create_llm_client(
     Raises:
         ValueError: If required configuration is missing
     """
-    model = model or os.getenv("LLM_MODEL", "gpt-5-mini")
+    model = model
     embedding_model = embedding_model or os.getenv(
         "EMBEDDING_MODEL", "text-embedding-ada-002"
     )

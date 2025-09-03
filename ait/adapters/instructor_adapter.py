@@ -1,9 +1,8 @@
-import json
 from http import HTTPStatus
 from typing import AsyncGenerator, Type
 
 import instructor
-from instructor.cache import AutoCache
+from openai import AsyncOpenAI
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
 from ait.core.domain.errors import LLMAdapterError
@@ -25,13 +24,29 @@ class InstructorAdapter(LLMPort):
         self._model = model
         self._embedding_model = embedding_model
 
-        cache = AutoCache(maxsize=1000)
-        self.client = instructor.from_provider(
-            model=model,
+        # cache = AutoCache(maxsize=1000)
+        openai_client = AsyncOpenAI(
             api_key=api_key,
-            cache=cache,
-            async_client=True,
+            base_url="http://localhost:11434/v1",
         )
+        self.client = instructor.from_openai(
+            client=openai_client,
+            mode=instructor.Mode.JSON,
+        )
+
+        # self.client = instructor.from_openai(
+        #     client=client,
+        #     model=model,
+        #     # async_client=True,
+        #     base_url="http://localhost:11434",
+        # )
+        # self.client = instructor.from_provider(
+        #     model=model,
+        #     api_key=api_key,
+        #     cache=cache,
+        #     async_client=True,
+        #     base_url="http://localhost:11434",
+        # )
 
     async def chat(self, messages: list[dict[str, str]]) -> CompletionResponse:
         """
@@ -102,27 +117,21 @@ class InstructorAdapter(LLMPort):
         Returns:
             CompletionResponse[T]: The response from the LLM
         """
-        schema = response_model.model_json_schema()
-        schema["name"] = response_model.__name__
-        response = await self.client.chat.completions.create(
+
+        (
+            instance,
+            completion,
+        ) = await self.client.chat.completions.create_with_completion(
+            response_model=response_model,
             model=self._model,
             messages=messages,  # type: ignore
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": response_model.__name__,
-                    "schema": schema,
-                },
-            },
         )
-        content = response.choices[0].message.content
-        if not content:
+        if not instance:
             raise LLMAdapterError(
                 status_code=HTTPStatus.SERVICE_UNAVAILABLE.value,
                 message="No response content from the model",
             )
-        content_json = json.loads(content)
         return CompletionResponse(
-            completion=response,
-            content=response_model.model_validate(content_json),
+            completion=completion,  # type: ignore
+            content=instance,
         )
