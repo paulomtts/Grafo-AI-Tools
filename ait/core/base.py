@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus
 from typing import Any, Type, TypeVar, Union
 
@@ -8,6 +7,7 @@ from pydantic import BaseModel
 from ait.core.domain.errors import BaseError
 from ait.core.ports import WorkflowPort
 from ait.core.tools import AITools
+from ait.core.utils import logger
 
 S = TypeVar("S", bound=BaseModel)
 V = TypeVar("V", bound=BaseModel)
@@ -96,21 +96,20 @@ class BaseWorkflow(WorkflowPort):
             validation_node (Node[V]): The validation node.
             target_nodes (list[Node[T]], optional): The target nodes. Defaults to None.
         """
+        source_output = self._validate_output(source_node, "Source node output is None")
+        validation_output = self._validate_output(
+            validation_node, "Validation node output is None"
+        )
         self.current_retries += 1
         if self.current_retries > self.max_retries:
             for child in validation_node.children:
                 await validation_node.disconnect(child)
             raise self.ErrorClass(
                 status_code=HTTPStatus.BAD_REQUEST.value,
-                message="Max retries reached",
+                message=f"Max retries reached. Validation node output: {validation_output.model_dump_json(indent=4)}",
             )
 
-        source_output = self._validate_output(source_node, "Source node output is None")
-        validation_output = self._validate_output(
-            validation_node, "Validation node output is None"
-        )
         if self.echo:
-            logger = logging.getLogger("AIT")
             logger.debug(f"Source Output: {source_output.model_dump_json(indent=2)}")
             logger.debug(
                 f"Validation Output: {validation_output.model_dump_json(indent=2)}"
