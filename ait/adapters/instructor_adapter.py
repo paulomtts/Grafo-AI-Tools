@@ -28,11 +28,11 @@ class InstructorAdapter(LLMPort):
         client_kwargs = dict(
             api_key=api_key,
         )
-        if base_url:
+        if not base_url:
             client_kwargs["base_url"] = "http://localhost:11434/v1"
-        openai_client = AsyncOpenAI(**client_kwargs)  # type: ignore
+        self.openai_client = AsyncOpenAI(**client_kwargs)  # type: ignore
         self.client = instructor.from_openai(
-            client=openai_client,
+            client=self.openai_client,
             mode=instructor.Mode.JSON,
         )
 
@@ -46,7 +46,7 @@ class InstructorAdapter(LLMPort):
         Returns:
             str: The response from the LLM
         """
-        output: ChatCompletion = await self.client.chat.completions.create(
+        output: ChatCompletion = await self.openai_client.chat.completions.create(
             model=self._model,
             messages=messages,  # type: ignore
             stream=False,
