@@ -60,12 +60,12 @@ class PydanticAdapter(ModellerPort):
         reduced_schema = ""
         for field, info in model.model_fields.items():
             reduced_schema += (
-                f"- {field}: {info.annotation}"
-                + (f" | {info.description}" if include_description else "")
+                f"{field}({info.annotation}"
                 + (
-                    f"(default: {info.default})\n"
+                    f", default={info.default})"
                     if info.default is not PydanticUndefined
-                    else "\n"
+                    else ")"
                 )
+                + (f": {info.description}" if include_description else "")
             )
         return reduced_schema

@@ -16,11 +16,6 @@ T = TypeVar("T", bound=BaseModel)
 MAX_RETRIES = 3
 
 
-class RetryCounter(BaseModel):
-    uuid: str
-    value: int = 0
-
-
 class BaseWorkflow(WorkflowPort):
     """
     Base class for agentic workflows.

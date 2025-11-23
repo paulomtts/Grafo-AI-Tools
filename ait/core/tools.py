@@ -2,6 +2,7 @@ import os
 from typing import Any, AsyncGenerator, Type, TypeVar
 
 from pydantic import BaseModel
+from toon_python import encode
 
 from ait.core.domain.interfaces import CompletionResponse
 from ait.factories import (
@@ -87,6 +88,16 @@ class AITools:
         return self.model_handler.reduce_model_schema(model, include_description)
 
     def _prepare_messages(self, path: str, **kwargs: Any) -> list:
+        for key, value in kwargs.items():
+            if isinstance(value, BaseModel):
+                kwargs[key] = encode(value.model_dump_json())
+            elif (
+                isinstance(value, list)
+                and len(value) > 0
+                and isinstance(value[0], BaseModel)
+                and all(isinstance(item, type(value[0])) for item in value)
+            ):
+                kwargs[key] = encode([item.model_dump_json() for item in value])
         prompt = self.prompt_formatter.render(
             path=path,
             input=kwargs,

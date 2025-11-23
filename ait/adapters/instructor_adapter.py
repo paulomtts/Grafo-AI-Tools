@@ -48,7 +48,7 @@ class InstructorAdapter(LLMPort):
         """
         output: ChatCompletion = await self.openai_client.chat.completions.create(
             model=self._model,
-            messages=messages,  # type: ignore
+            messages=messages,
             stream=False,
         )
         response = output.choices[0].message.content
@@ -78,7 +78,7 @@ class InstructorAdapter(LLMPort):
             ChatCompletionChunk, None
         ] = await self.openai_client.chat.completions.create(
             model=self._model,
-            messages=messages,  # type: ignore
+            messages=messages,
             stream=True,
         )
         async for chunk in output:
@@ -112,7 +112,7 @@ class InstructorAdapter(LLMPort):
         ) = await self.client.chat.completions.create_with_completion(
             response_model=response_model,
             model=self._model,
-            messages=messages,  # type: ignore
+            messages=messages,
         )
         if not instance:
             raise LLMAdapterError(
@@ -120,6 +120,6 @@ class InstructorAdapter(LLMPort):
                 message="No response content from the model",
             )
         return CompletionResponse(
-            completion=completion,  # type: ignore
+            completion=completion,
             content=instance,
         )
