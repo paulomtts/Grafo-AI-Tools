@@ -76,7 +76,7 @@ class InstructorAdapter(LLMPort):
         """
         output: AsyncGenerator[
             ChatCompletionChunk, None
-        ] = await self.client.chat.completions.create(
+        ] = await self.openai_client.chat.completions.create(
             model=self._model,
             messages=messages,  # type: ignore
             stream=True,
