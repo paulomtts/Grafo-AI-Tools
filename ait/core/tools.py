@@ -140,7 +140,7 @@ class AITools:
             AsyncGenerator[CompletionResponse, None]: Stream of responses from the LLM
         """
         messages = self._prepare_messages(path, **kwargs)
-        async for response in await self.llm_client.stream(messages=messages):
+        async for response in self.llm_client.stream(messages=messages):
             yield response
 
     async def asend(
